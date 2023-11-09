@@ -1,0 +1,373 @@
+<!-- Cars card -->
+<div *ngIf="car" class="relative max-w-md flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
+
+    <!-- Admin CRUD Button (Edit/Remove) -->
+    <!-- Edit Button -->
+    <div (click)="editProduct(dataModelTypeEnum.car, car)"
+        class="absolute top-0 left-0 -translate-x-1/3 -translate-y-1/2 bg-green-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <!-- Delete Button -->
+    <div (click)="deleteProduct(dataModelTypeEnum.car ,car)"
+        class="absolute top-0 right-0 translate-x-1/3 -translate-y-1/2 bg-pink-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>delete_forever</mat-icon>
+        </button>
+    </div>
+
+    <!-- (image + favorites button) section -->
+    <div class="relative mx-4 mt-4 overflow-hidden text-white shadow-lg rounded-xl bg-blue-gray-500 bg-clip-border shadow-blue-500/40 max-h-60">
+
+        <!-- product image -->
+        <img [src]="car.imageUrl"
+            alt="ui/ux review check"
+            class="object-contain" />
+
+        <!-- Adds masking effect on the above image -->
+        <div class="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60 hover:from-orange-300/25 ">
+        </div>
+
+        <!-- Add to favorites button -->
+        <div class="!absolute top-2 right-5 h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase transition-all hover:bg-red-500/10 hover:text-red-500 active:bg-red-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+            data-ripple-dark="true">
+            <button mat-icon-button>
+                <mat-icon color="">favorite</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- text/content section -->
+    <div class="p-6">
+        <!-- (offers + location) section -->
+        <div class="flex items-center mb-5">
+            <div class="flex flex-wrap items-center gap-2 flex-grow">
+                <span *ngFor="let offer of car.offerTags"
+                    class="inline-block px-2 py-1 leading-none bg-yello-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs"
+                    [ngClass]="offer.color.toLowerCase() === 'red' ? 'bg-red-200' : offer.color.toLowerCase() === 'blue' ? 'bg-blue-200': 'bg-yellow-200'"
+                    >
+                    {{offer.name}}
+                </span>
+            </div>
+            <div
+                class="flex items-center gap-1 font-sans min-w-max font-normal tracking-wide text-xs text-green-800/70">
+                <mat-icon class="">location_on</mat-icon>
+                <span>{{car.location}}</span>
+            </div>
+        </div>
+        <!-- Car (Make, model, year) + rating section -->
+        <div class="flex items-center justify-between mb-3">
+            <span class="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-gray-900">
+                {{car.year}} {{car.make}} {{car.model}}  
+            </span>
+            <div
+                class="flex items-center gap-1.5 font-sans text-base font-semibold leading-relaxed text-blue-900/80 antialiased bg-transparent">
+                <mat-icon class="text-yellow-300">star</mat-icon>
+                <span>{{car.rating}}</span>
+            </div>
+        </div>
+        <!-- Car description section -->
+        <p class="block font-sans text-base antialiased font-light leading-relaxed text-gray-800">
+            {{car.desc}}
+        </p>
+        <!-- Car Data (transmission, mileage, fuel economy ...) Section -->
+        <div
+            class="flex flex-col text-xs mt-5 pt-3 font-sans  text-white/70 antialiased font-medium capitalize tracking-tight border-l border-r border-pink-500 bg-black/90  px-5 rounded-xl shadow-xl shadow-pink-400/30">
+            <div class="flex justify-between items-center">
+                <p class="flex items-center gap-1.5 text-left">
+                    <mat-icon>speed</mat-icon>
+                    {{car.mileage}} Kms
+                </p>
+                <p class="flex items-center gap-1.5 text-right">
+                    {{car.transmission}}
+                    <!-- Had to manually use the span element as mat-icon was not rendering -->
+                    <span class="material-symbols-outlined">
+                        auto_transmission
+                    </span>
+                    <!-- <mat-icon class="text-white">
+                            auto_transmission
+                        </mat-icon> -->
+                </p>
+            </div>
+            <div class="flex justify-between items-center">
+                <p class="flex items-center gap-1.5 text-left">
+                    <mat-icon>local_gas_station</mat-icon>
+                    {{car.fuelEconomy}} L/1000Kms
+                </p>
+                <p class="capitalize flex items-center gap-1.5 text-right tracking-tighter">
+                    {{car.accidentHistory.count}} {{car.accidentHistory.count? car.accidentHistory.desc: 'Accidents'}}
+                    <mat-icon>no_crash</mat-icon>
+                </p>
+            </div>
+            <div class="flex justify-between items-center">
+                <p class="flex items-center gap-1.5 text-left capitalize">
+                    <mat-icon>directions_car</mat-icon>
+                    {{car.bodyType}}
+                </p>
+                <p class="uppercase flex items-center gap-1.5 text-right tracking-tighter">
+                    {{car.drivetrain}}
+                    <mat-icon>info</mat-icon>
+                </p>
+            </div>
+        </div>
+        <!-- Car feature tags section -->
+        <div class="flex flex-wrap items-center gap-3 mt-8 ">
+            <div class="relative">
+                <span
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    <mat-icon>bluetooth_drive</mat-icon>
+                </span>
+                <div
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words  rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    $129 per night
+                </div>
+            </div>
+            <div class="relative">
+
+                <span data-tooltip-target="wifi"
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    <mat-icon>sensors</mat-icon>
+                </span>
+                <div data-tooltip="wifi"
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    Free wifi
+                </div>
+            </div>
+            <div class="relative">
+                <span data-tooltip-target="bedrooms"
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    <mat-icon>settings_remote</mat-icon>
+                </span>
+                <div data-tooltip="bedrooms"
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    2 bedrooms
+                </div>
+            </div>
+            <div class="relative">
+                <span data-tooltip-target="tv"
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    <mat-icon>engineering</mat-icon>
+                </span>
+                <div data-tooltip="tv"
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    64" HDTV
+                </div>
+            </div>
+            <div class="relative">
+                <span data-tooltip-target="fire"
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    <mat-icon>analytics</mat-icon>
+                </span>
+                <div data-tooltip="fire"
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    Fire alert
+                </div>
+            </div>
+            <div class="relative">
+                <span data-tooltip-target="more"
+                    class="inline-block w-12 h-12 cursor-pointer rounded-full border border-pink-500/5 bg-pink-500/5 p-3 text-pink-500 transition-colors hover:border-pink-500/10 hover:bg-pink-500/10 hover:!opacity-100 peer">
+                    +20
+                </span>
+                <div data-tooltip="more"
+                    class="absolute -top-9 -left-4 z-50 w-max whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none hidden peer-hover:inline-block peer-hover:opacity-50">
+                    And +20 more
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- card footer - (price + buttons) -->
+    <div class="p-6 pt-0 flex flex-col space-y-4">
+        <span class="block text-right text-xl font-bold text-gray-800/90 ">{{car.price | currency}}</span>
+        <button
+            class="block w-full select-none rounded-lg bg-pink-500 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button" data-ripple-light="true">
+            View Buying Options
+        </button>
+    </div>
+</div>
+
+<!-- Tires/Batteries/Accessories card -->
+<div *ngIf="accessory" class="relative flex flex-col gap-2 py-4 px-3 border rounded-lg border-sky-700/70 bg-white text-gray-800 font-sans max-w-sm">
+    <!-- Admin Edit & Delete Btns -->
+    <div (click)="editProduct(dataModelTypeEnum.accessory, accessory)"
+        class="absolute uppercase top-0 left-0 -translate-x-1/3 -translate-y-1/2 bg-green-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <div (click)="deleteProduct(dataModelTypeEnum.accessory, accessory)"
+        class="absolute uppercase top-0 right-0 translate-x-1/3 -translate-y-1/2 bg-pink-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>delete_forever</mat-icon>
+        </button>
+    </div>
+
+    <!-- image layer -->
+    <div class="relative h-60 flex item-center justify-center overflow-hidden rounded-sm">
+        <img [src]="accessory.imageUrl" alt="" 
+        class="object-cover rounded-md hover:scale-110 hover:cursor-pointer hover:skew-x-1 hover:skew-y-3 transition-all duration-700">
+
+        <!-- Add to cart button -->
+        <div *ngIf="!productQtyInCart"
+            class="absolute bottom-1 right-1 flex items-center gap-1.5 rounded-3xl py-1.5 px-3 bg-sky-700 text-white text-md font-semibold hover:cursor-pointer hover:bg-sky-900"
+            (click)="addToCart(accessory)">
+                <mat-icon class="scale-90">add_shopping_cart</mat-icon>
+                <span>Add</span>
+        </div>
+        <!-- Expandable cart qty edit functionality - Is shown once item is added to cart (Walmart feature) -->
+        <button *ngIf="productQtyInCart" 
+            (focus)="showCartQtyEditBtns = !showCartQtyEditBtns" 
+            (blur)="showCartQtyEditBtns= !showCartQtyEditBtns"
+            class="absolute bottom-1 right-1 flex items-center gap-1 justify-between rounded-3xl py-1.5 px-3 bg-sky-700 text-white text-md font-semibold select-none group"
+        >
+            <mat-icon *ngIf="showCartQtyEditBtns" 
+                class="rounded-full hover:cursor-pointer hover:bg-sky-900" (click)="updateCartItemQty(cartUpdateMethodEnum.remove, accessory._id)">remove</mat-icon>
+            <span [ngClass]="{'text-base px-1': !showCartQtyEditBtns}">{{productQtyInCart}}</span>
+            <mat-icon *ngIf="showCartQtyEditBtns" 
+                class="rounded-full hover:cursor-pointer hover:bg-sky-900" (click)="updateCartItemQty(cartUpdateMethodEnum.add, accessory._id)">add</mat-icon>
+        </button>
+
+        <!-- Save to wishlist button -->
+        <div class="absolute bottom-1 left-1 flex items-center gap-1 rounded-3xl py-1.5 px-3 bg-pink-700 text-white text-md font-semibold hover:cursor-pointer hover:bg-pink-800 group">
+            <mat-icon class="text-white/[0.45] group-hover:text-white">favorite</mat-icon>
+            <span>Save</span>
+        </div>
+        
+    </div>
+    <!-- text layer -->
+    <div class="flex flex-col justify-start text-left antialiased gap-3 my-2">
+        <!-- Brand + Product name + size -->
+        <span class="font-medium break-words">{{accessory.brand}} {{accessory.name}} {{accessory.size}}</span>
+        <div class="font-medium text-xs flex flex-wrap gap-3 justify-between items-center ">
+            <div class="tracking-tighter flex items-center text-blue-800/80">
+                <mat-icon *ngFor="let i of [].constructor(3)">star</mat-icon>
+                <mat-icon >star_half</mat-icon>
+                <mat-icon>star_outline</mat-icon>
+                <span class="text-base font-bold">{{accessory.rating}} ({{accessory.ratingUserCount || 0}})</span>
+                
+            </div>
+            <span class="font-extralight tracking-wide">
+                {{accessory.modelNumber}}
+            </span>
+        </div>
+        <div class="flex flex-wrap gap-1 justify-between items-center tracking-tight ">
+
+            <span class="tracking-tiht">
+                {{accessory.category.toLowerCase() === 'tires' ? 'From': ''}} 
+                <span class="font-semibold text-red-700">
+                    {{accessory.price | currency}} 
+                </span>
+                {{accessory.category.toLowerCase() === 'tires' ? 'Each': ''}} 
+            </span>
+            <div class="flex items-center gap-1 text-xs tracking-tighter font-normal">
+                <mat-icon class="text-green-700/90 scale-[0.8]">check_box</mat-icon>
+                <span>{{accessory.stockQty}} in stock</span>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1 items-center ">
+            <span *ngFor="let offer of accessory.offerTags" 
+                class="py-1.5 px-1 font-semibold text-xs capitalize rounded-md" 
+                [ngClass]="offer.color.toLowerCase() === 'red' ? 'bg-red-400/70' : offer.color.toLowerCase() === 'blue' ? 'bg-blue-400/70': 'bg-yellow-400/70'"
+            >
+                {{offer.name}}
+            </span>
+            <!-- <span class="py-1.5 px-1 bg-yellow-400/70 font-semibold text-xs capitalize rounded-md">Clearance</span>
+            <span class="py-1.5 px-1 bg-sky-400/30 font-semibold text-xs capitalize  rounded-md">Top Rated</span>
+            <span class="py-1.5 px-2 bg-red-700/90 font-semibold text-xs uppercase text-white rounded-md">Tested</span>
+            <span class="py-1.5 px-1 bg-pink-300/40 font-semibold text-xs capitalize text-hite  rounded-md">Exclusive</span> -->
+        </div>
+    </div>
+</div>
+
+<!-- Phase 2 make a button to switch views from card view to expanded view -->
+<!-- Tires/Batteries/Accessories card expanded version -->
+<div *ngIf="false"
+    class="relative flex gap-6 py-4 px-3 border rounded-lg border-sky-700/70 bg-white text-gray-800 font-sans max-w-screen-xl">
+    <!-- Admin Edit & Delete Btns -->
+    <div
+        class="absolute uppercase top-0 left-0 -translate-x-1/3 -translate-y-1/2 bg-green-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <div
+        class="absolute uppercase top-0 right-0 translate-x-1/3 -translate-y-1/2 bg-pink-700/75 rounded-full text-white w-12 h-12 z-10">
+        <button mat-icon-button>
+            <mat-icon>delete_forever</mat-icon>
+        </button>
+    </div>
+
+    <!-- image layer -->
+    <div class="relative min-w-[200px] h-60 flex item-center justify-center overflow-hidden rounded-sm flex-grow-0">
+        <img src="https://media-www.canadiantire.ca/product/automotive/tires/winter-tires/0069512/-205-55r16-h-motomaster-winter-edge-ii-19fbf985-4dcb-4df2-ae4e-84c8551f167c-jpgrendition.jpg?im=whresize&wid=200&hei=200"
+            alt=""
+            class="object-cover rounded-md hover:scale-110 hover:cursor-pointer hover:skew-x-1 hover:skew-y-3 transition-all duration-700">
+
+        <!-- Add to cart button -->
+        <div
+            class="absolute bottom-1 right-1 flex items-center gap-1 rounded-3xl py-1.5 px-3 bg-sky-700 text-white text-md font-semibold hover:cursor-pointer hover:bg-sky-900">
+            <mat-icon class="!hs-full">add</mat-icon>
+            <span>Add</span>
+        </div>
+
+        <!-- Save to wishlist button -->
+        <div
+            class="absolute bottom-1 left-1 flex items-center gap-1 rounded-3xl py-1.5 px-3 bg-pink-700 text-white text-md font-semibold hover:cursor-pointer hover:bg-pink-800 group">
+            <mat-icon class="text-white/[0.45] group-hover:text-white">favorite</mat-icon>
+            <span>Save</span>
+        </div>
+
+    </div>
+    <!-- text layer -->
+    <div class="flex flex-col  text-left antialiased gap-3 my-2 justify-between flex-grow">
+        <span class="font-medium ">Lorem ipsum dolor sit amet consectetur adipisicing elit. A quas.</span>
+        <div class="font-medium text-xs flex flex-wrap gap-1 justify-between items-center ">
+            <!-- <div></div> -->
+            <div class="tracking-tighter flex items-center text-blue-800/80">
+                <mat-icon *ngFor="let i of [].constructor(3)">star</mat-icon>
+                <mat-icon>star_half</mat-icon>
+                <mat-icon>star_outline</mat-icon>
+                <span class="text-base font-bold">4.8 (152)</span>
+
+            </div>
+            <span class="font-extralight tracking-wide">
+                #187-1854X
+            </span>
+        </div>
+        <div class="flex flex-wrap gap-1 justify-between items-center tracking-tight ">
+
+            <span class="tracking-tiht">
+                From
+                <span class="font-semibold text-red-700">
+                    $154.99
+                </span>
+                Each
+            </span>
+            <div class="flex items-center gap-1 text-xs tracking-tighter font-normal">
+                <mat-icon class="text-green-700/90 scale-[0.8]">check_box</mat-icon>
+                <span>5 in stock</span>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1 items-center ">
+            <span class="py-1.5 px-1 bg-yellow-400/70 font-semibold text-xs capitalize rounded-md">Clearance</span>
+            <span class="py-1.5 px-1 bg-sky-400/30 font-semibold text-xs capitalize  rounded-md">Top Rated</span>
+            <span class="py-1.5 px-2 bg-red-700/90 font-semibold text-xs uppercase text-white rounded-md">Tested</span>
+            <span
+                class="py-1.5 px-1 bg-pink-300/40 font-semibold text-xs capitalize text-hite  rounded-md">Exclusive</span>
+        </div>
+    </div>
+    <!-- Extra content layer (features) -->
+    <div class="hidden min-[700px]:flex flex-col gap-1.5 px-2 py-1">
+        <h3 class="!font-medium !tracking-wide !capitalize !text-lg">Features</h3>
+        <ul class="list-disc px-4 pr-0">
+            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum odio in error ipsum quis perspiciatis ipsa quidem?</li>
+            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum odio in error ipsum quis perspiciatis ipsa quidem?</li>
+            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum odio in error ipsum quis perspiciatis ipsa quidem?</li>
+        </ul>
+    </div>
+
+</div>
+

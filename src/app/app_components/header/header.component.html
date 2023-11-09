@@ -1,0 +1,78 @@
+<mat-toolbar color="primary">
+    <div class="w-full flex items-center justify-between">
+        <div class="flex items-center">
+            <button mat-icon-button 
+                    (click)="sideNavToggleBtnClick()">
+                        <mat-icon>{{sideNavTglBtnIcon}}</mat-icon>
+            </button>
+            <span>My App</span>
+        </div>
+        <div class="">
+            <!-- Cart Button -->
+            <button mat-icon-button 
+                [matMenuTriggerFor]="menu" 
+                #matMenuTrigger="matMenuTrigger">
+                <mat-icon [matBadge]="totalCartItems ? totalCartItems: ''" matBadgeColor="accent">shopping_cart</mat-icon>
+            </button>
+            <!-- Cart Button Menu  -->
+            <mat-menu #menu="matMenu" [hasBackdrop]="false">
+                <!-- Cart items display -->
+                <!-- $event.stopPropagation() helps not close the mat menu on click inside it -->
+                <div *ngFor="let ci of cart.items"
+                    (click)="$event.stopPropagation()"
+                    class="flex gap-4 justify-between items-center border-b border-b-white/20 border-dotted p-2 max-h-64 text-xs">
+                    <span [matBadge]="ci.cartQty" class="min-w-[35px] min-h-[35px] w-[35px] h-[35px] grid content-center r-2">
+                        <img class="object-cover rounded-2xl" [src]="ci.imageUrl" alt="">
+                    </span>
+                    <span class="w-28 max-h-60 box-ontent overflow-clip">
+                        {{ci.name}}
+                    </span>
+                    <!-- <span>x2</span> -->
+                    <div class="flex flex-col gap-1 items-center justify-center">
+                        <span>{{(ci.cartQty * ci.price) | currency}}</span>
+                        <div class="flex gap-3 justify-between scale-[0.65]">
+                            <mat-icon class="rounded-full hover:bg-white/10 cursor-pointer" 
+                                (click)="updateCartItemQty(cartUpdateMethodEnum.remove, ci.productId)">
+                                remove
+                            </mat-icon>
+                            <mat-icon class="rounded-full hover:bg-white/10 cursor-pointer" 
+                                (click)="updateCartItemQty(cartUpdateMethodEnum.add, ci.productId)">
+                                add
+                            </mat-icon>
+                        </div>
+                    </div>
+                    <button class="grid content-center" (click)="$event.stopPropagation(); removeItemFromCart(ci)">
+                        <mat-icon class="scale-[0.75] hover:txt-red-600 rounded-full hover:bg-red-600/70">close</mat-icon>
+                    </button>
+                </div>
+                <!-- Buttons section (Checkout/Clear_Cart) -->
+                <div *ngIf="totalCartItems" class="flex gap-1 justify-between items-center px-4 pt-3">
+                    <!-- Checkout Button -->
+                    <button mat-raised-button color="accent" class="text-xs contents scale-90">
+                        <mat-icon>shopping_cart_checkout</mat-icon>
+                        <span>Checkout</span>
+                    </button>
+                    <!-- Clear cart -->
+                    <button mat-raised-button 
+                        color="warn" 
+                        class="text-xs contents scale-90"
+                        (click)="matMenuTrigger.closeMenu(); clearCartBtnPressed()">
+                        <mat-icon>remove_shopping_cart</mat-icon>
+                        <span>Clear Cart</span>
+                    </button>
+                </div>
+
+                <div *ngIf="!totalCartItems" 
+                    class="h-64 w-64 flex items-center flex-col justify-center gap-9 p-3">
+                    <mat-icon class="scale-[3]" color="warn">shopping_cart</mat-icon>
+                    <span>Oops! seems like your cart is empty.</span>
+                </div>
+            </mat-menu>
+
+            <!-- Login Button -->
+            <button mat-icon-button  class="">
+                <mat-icon>login</mat-icon>
+            </button>
+        </div>
+    </div>
+</mat-toolbar>

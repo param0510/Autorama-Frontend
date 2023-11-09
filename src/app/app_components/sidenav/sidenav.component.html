@@ -1,0 +1,97 @@
+<mat-nav-list backgroundColor="warn">
+    <mat-list-item routerLink="/home">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Home</span>
+        <span matListItemLine>Wanna visit home?</span>
+    </mat-list-item>
+    <mat-list-item routerLink="/inventory">
+        <mat-icon matListItemIcon>store</mat-icon>
+        <span matListItemTitle>Our Inventory</span>
+        <span matListItemLine>Wanna surf through our store?</span>
+    </mat-list-item>
+    <mat-list-item routerLink="/my-wishlist">
+        <mat-icon matListItemIcon>favorite_border</mat-icon>
+        <span matListItemTitle>My Wishlist</span>
+        <span matListItemLine>Save your collection here!</span>
+    </mat-list-item>
+    <mat-list-item routerLink="/order-tracker" disabled="true">
+        <mat-icon matListItemIcon>local_shipping</mat-icon>
+        <span matListItemTitle>Order Tracker</span>
+        <span matListItemLine>Keep an eye on your order!</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="/sell-or-trade" disabled="true">
+        <button></button>
+        <mat-icon matListItemIcon>swap_horiz</mat-icon>
+        <span matListItemTitle>Sell or Trade</span>
+        <span matListItemLine>Time to get Trady</span>
+    </mat-list-item>
+    <mat-list-item routerLink="/client-reviews" disabled="true">
+        <mat-icon matListItemIcon>star</mat-icon>
+        <span matListItemTitle>Client Reviews</span>
+        <span matListItemLine>See what our clients say about us.</span>
+    </mat-list-item>
+    
+    <mat-divider inset="true"></mat-divider>
+
+    <mat-list-item routerLink="/support-services">
+        <mat-icon matListItemIcon>support_agent</mat-icon>
+        <span matListItemTitle>Support Services</span>
+        <span matListItemLine>We're here to help you 😊</span>
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item routerLink="/sign-in">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>Sign-in/Sign-up</span>
+        <span matListItemLine>Make an account</span>
+        <button mat-icon-button
+                matListItemMeta>
+                    <mat-icon>info</mat-icon>
+        </button>
+    </mat-list-item>
+</mat-nav-list>
+
+
+
+<mat-nav-list>
+    <a mat-list-item routerLink="/inventory/tires">Home</a>
+</mat-nav-list>
+
+
+<!-- Tree -->
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="pr-12">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <!-- use a disabled button to provide padding for tree leaf -->
+        <button mat-icon-button disabled></button>
+        {{node.name}}
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+        </button>
+        {{node.name}}
+    </mat-tree-node>
+</mat-tree>
+
+
+<mat-nav-list>
+    <mat-list-item class="">
+        <mat-icon matListItemIcon>account_balance</mat-icon>
+        <a  matListItemTitle 
+            routerLink="/inventory/param" >sample link </a>
+        <button 
+            mat-icon-button 
+            matListItemMeta
+            color="warn"
+            >
+                <mat-icon >info</mat-icon>
+        </button>
+        <p matListItemLine>Lorem ipsume filler text</p>
+    </mat-list-item>
+</mat-nav-list>

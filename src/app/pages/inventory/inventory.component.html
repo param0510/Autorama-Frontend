@@ -1,0 +1,62 @@
+<!-- This has animations but does not have route change abilities -->
+<!-- <mat-tab-group color="accent" 
+    class="bg-slate-900">
+    <div >
+        <mat-tab *ngFor="let headLabel of matTabLabelList" [label]="headLabel">
+            <app-product-catalog [productGrp]="headLabel"></app-product-catalog>
+        </mat-tab>
+
+    </div>
+</mat-tab-group> -->
+
+<!-- Mat Tab Nav Bar - Does not have slide animations you have to impelement by externally importing the AngularAnimations module -->
+<div>
+    <nav mat-tab-nav-bar 
+        [tabPanel]="tabPanel"
+        class="bg-slate-900" 
+        color="accent">
+            <a mat-tab-link 
+                *ngFor="let matTabLabel of matTabLabelList" 
+                (click)="activeMatTabLink !== matTabLabel ? matTabChange(matTabLabel) : null"
+                [active]="activeMatTabLink === matTabLabel"
+                [routerLink]="['/inventory', matTabLabel.toLowerCase()]"
+                class="capitalize">
+                {{matTabLabel}}
+            </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel="matTabNavPanel">
+        <div class="p-5 min-h-screen">
+            <app-product-filter></app-product-filter>
+            
+            <mat-divider></mat-divider>
+            <div class="flex justify-between items-center">
+                <span>{{activeMatTabLink}}</span>
+                <span>201 results showing</span>
+            </div>
+
+            <mat-divider></mat-divider>
+            <div class="flex flex-wrap w-full gap-10 py-12 pr-3 justify-items-center justify-center items-center">
+
+                <!-- Add a new product - card -->
+                <div
+                    class="flex justify-center items-center w-96 h-96 border-2 border-dotted rounded-lg border-sky-400/80 hover:bg-gray-700/60 hover:scale-110 hover:cursor-pointer transition-all duration-700 group" 
+                    (click)="showProductForm(activeMatTabLink === dataModelTypeEnum.car ? dataModelTypeEnum.car : dataModelTypeEnum.accessory)">
+                    <div
+                        class="w-48 h-48 rounded-full border-2 border-white/80 border-dashed flex justify-center items-center group-hover:bg-teal-500/30">
+                        <mat-icon class="scale-[2.5]">add</mat-icon>
+                    </div>
+                </div>
+                
+                <div *ngIf="activeMatTabLink === dataModelTypeEnum.car else elseBlock" class="contents">
+                    <app-product-card  [car]="c" *ngFor="let c of cars" (inventoryDataRefreshEvntEmitter)="refreshData(dataModelTypeEnum.car)"></app-product-card>
+                </div>
+                <ng-template #elseBlock class="contents">
+                    <app-product-card  [accessory]="acc" *ngFor="let acc of accessories" (inventoryDataRefreshEvntEmitter)="refreshData(dataModelTypeEnum.accessory)"></app-product-card>
+                </ng-template>
+                
+            </div>
+            
+        </div>
+    </mat-tab-nav-panel>
+</div>
+

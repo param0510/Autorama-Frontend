@@ -1,0 +1,23 @@
+<!-- Header -->
+<app-header (sideNavToggleEvntEmitter)="sidenav.toggle()"></app-header>
+
+<!-- Side Nav Bar Component -->
+<mat-sidenav-container 
+    hasBackdrop="true"
+    class="h-full">
+        <mat-sidenav 
+            #sidenav
+            mode="over"><app-sidenav></app-sidenav></mat-sidenav>
+    <mat-sidenav-content>
+        <app-inventory></app-inventory>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Pages are loaded here... -->
+<!-- <router-outlet></router-outlet> -->
+
+
+<!-- Footer (Add later) -->
+
+
+

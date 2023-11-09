@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-4">
+
+    <!-- filter section -->
+    <div class="flex items-center divide-x-2 divide-red-400 gap-4" *ngIf="filters.length > 0">
+        <span>Filters</span>
+        <mat-chip-set class="pl-6">
+            <mat-chip-row *ngFor="let filter of filters" (removed)="removeFilterChip(filter)" class="mx-1">
+                {{filter.value}}
+                <button matChipRemove [attr.aria-label]="'remove ' + filter.value">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-set>
+    </div>
+
+    <!-- Filter bAr -->
+    <div class="flex flex-wrap justify-between items-center">
+
+        <div class="flex flex-wrap gap-2 ">
+            <!-- Primary filter - (Implement this later)-->
+            <!-- <mat-form-field appearance="fill">
+                    <mat-label>Favorite Fruits</mat-label>
+                    <input placeholder="New Fruit..." [formControl]="fruitCtrl" matInput [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAutoComplete($event)">
+                        <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                            {{fruit}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field> -->
+
+            <div *ngFor="let filterModel of filterModelList">
+                <mat-form-field appearance="fill" *ngIf="filterModel.values.length">
+                    <mat-label>{{labelCapitalizer(filterModel.name)}}</mat-label>
+                    <mat-select [(value)]="filterModel.userInputValues" multiple>
+                        <mat-option #matOption
+                            (click)="matOptionClickEvnt(filterValue, matOption.selected, filterModel.name)"
+                            *ngFor="let filterValue of filterModel.values" [value]="filterValue">
+                            {{filterValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <!-- End items like Sort by and Item Display limit -->
+        <div class="flex flex-wrap gap-1">
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Sort By:</mat-label>
+                    <mat-select [(value)]="sortByValue">
+                        <mat-option *ngFor="let srtOpt of sortByOptions" [value]="srtOpt">
+                            {{srtOpt}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Show</mat-label>
+                    <mat-select [(value)]="totalProdsShowing">
+                        <mat-option *ngFor="let totProdsShow of totalProdsShowList" [value]="totProdsShow">
+                            {{totProdsShow}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+    </div>
+</div>

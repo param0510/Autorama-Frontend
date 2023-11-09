@@ -1,0 +1,322 @@
+<h2 mat-dialog-title>{{formInEditMode ? 'Edit' : 'Add'}} {{carFormGroup ? 'Car' : 'Accessory'}}</h2>
+<mat-dialog-content class="mat-typography">
+    <!-- Car Form  -->
+
+    <!-- 
+     _id: any, 
+    brand?: string,
+    name: string,
+    category: string,
+    subCategory?: string,
+    price: number,
+    size: string,
+    modelNumber: string,
+    stockQty: number,
+    imageUrl?: string,
+    rating?: number,
+    ratingUserCount?: number,
+    offerTags?: [OfferTag],
+    features?: string,
+    visible: boolean,
+ -->
+    <form *ngIf="carFormGroup" [formGroup]="carFormGroup" class="" (ngSubmit)="formSubmitted(dataModelTypeEnum.car)">
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Make</mat-label>
+                <input matInput formControlName="make"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Model</mat-label>
+                <input matInput formControlName="model"/>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Year</mat-label>
+                <input matInput formControlName="year"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Transmission</mat-label>
+                <input matInput formControlName="transmission"/>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Fuel Economy</mat-label>
+                <input matInput formControlName="fuelEconomy"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="desc"/>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Price</mat-label>
+                <input matInput formControlName="price"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Body Type</mat-label>
+                <input matInput formControlName="bodyType"/>
+            </mat-form-field>
+        </div>
+        <!-- Important formGroupName is required for FormGroup (here - accidentHistory) inside the main FormGroup (here - carFormGroup) -->
+        <!-- accidentHistory is an object defined as a property inside carFormGroup -->
+        <!-- So accidentHistory needed to be made a FormGroup itself for nesting FormControl properties like 'count' and 'desc' -->
+        <div formGroupName="accidentHistory" 
+            class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Accident Count</mat-label>
+                <input matInput formControlName="count"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Accident Description</mat-label>
+                <input matInput formControlName="desc"/>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Drivetrain</mat-label>
+                <input matInput formControlName="drivetrain"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Rating</mat-label>
+                <input matInput formControlName="rating"/>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Location</mat-label>
+                <input matInput formControlName="location"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Mileage</mat-label>
+                <input matInput formControlName="mileage"/>
+            </mat-form-field>
+        </div>
+        <div class="block">
+            <mat-form-field class="w-full" appearance="outline" color="accent">
+                <mat-label>Image Url</mat-label>
+                <input matInput formControlName="imageUrl"/>
+            </mat-form-field>
+        </div>
+        
+        <!-- Feature Tags Section -->
+        <!-- Uses FormArray to interact with FormGroup -->
+        <div class="block">
+            <mat-form-field class="w-full" color="accent" appearance="outline">
+                <mat-label>Feature Tags</mat-label>
+                <mat-chip-grid #chipGrid formArrayName="featureTags">
+                    <mat-chip-row *ngFor="let formCtrl of getFormArray(formArrayNameEnum.featureTags).controls"
+                        (removed)="removeMatChip(formCtrl, formArrayNameEnum.featureTags)" 
+                        [editable]="true"
+                        (edited)="editMatChip(formCtrl, formArrayNameEnum.featureTags, $event)"
+                        >
+                            {{formCtrl.value}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                    </mat-chip-row>
+                    <input placeholder="New feature..." 
+                        [matChipInputFor]="chipGrid"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                        [matChipInputAddOnBlur]="true"
+                        (matChipInputTokenEnd)="addMatChipInput(formArrayNameEnum.featureTags, $event)" 
+                        />
+                </mat-chip-grid>
+            </mat-form-field>
+        </div>
+
+        <!--  -->
+        <div class="w-full mb-4 flex flex-col gap-1" formArrayName="offerTags">
+            
+            <!-- Print the entire carFormGroup object in console, to understand better -->
+            <!-- Loops through all the FormGroup object(s) stored in the FormArray object's controls property/array -->
+            <!-- fromGroupIndex stores the index value corresponding to each FormGroup object in the FormArray object's controls property/array -->
+            <!-- You can also make it (let i = index) , This helps us make a local variable in the angular html template -->
+            <!-- index helps us store the value of the index at each iteration through the loop -->
+            <!-- [formGroupName]="formGroupIndex" helps us directly link the FormGroup object by just specifying the index value. To understand this better open up the FormArray.controls property - you'll see that even an array can be represented in the form of an object in (key, value) pairs -->
+            <!-- So here key/index is the left-hand-side and value is on the right-hand-side, just like an object -->
+            <!-- Important Learning: -->
+            <!-- formGroupName/formControlName/formArrayName represent the left-hand-side or the property names -->
+            <!-- and fromControl/formGroup refers to the property itself so it must be a FormControl/FormGroup object only -->
+            <div *ngFor="let formGrp of getFormArray(formArrayNameEnum.offerTags).controls; let formGroupIndex = index" 
+                class="flex gap-2 justify-center items-center"
+                [formGroupName]="formGroupIndex">
+
+                <!-- Form Control for 'name' property of each FormGroup object in the FormArray  -->
+                <mat-form-field class="flex-grow" appearance="outline" color="accent">
+                    <mat-label>Offer Name</mat-label>
+                    <input matInput formControlName="name" />
+                </mat-form-field>
+                <!-- Form Control for 'color' property of each FormGroup object in the FormArray  -->
+                <mat-form-field class="flex-grow" appearance="outline" color="accent">
+                    <mat-label>Offer Color</mat-label>
+                    <input matInput formControlName="color" />
+                </mat-form-field>
+
+                <button type="button" class="flex-grow-0 self-start w-6 h-6 rounded-full bg-slate-5 hover:bg-red-500/70" 
+                    (click)="removeFormGrpInFormArray(formGroupIndex, formArrayNameEnum.offerTags)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+
+            <!-- Button to add a new Form Group of (Name, Color) -->
+            <button
+                type="button"
+                class="w-full flex items-center justify-center rounded-md border border-gray-500 border-dotted py-3 hover:border-gray-400 hover:py-3.5 transition-all duration-300"
+                (click)="addChildFormGroupBox(formArrayNameEnum.offerTags)">
+                <span>Add Offer Tags</span>
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+
+        <!-- Visible/Hidden Slide Toggle  -->
+        <div class="mb-5">
+            <mat-slide-toggle formControlName="visible"> 
+                {{carFormGroup.controls['visible'].value ? 'Visible' : 'Hidden'}}
+            </mat-slide-toggle>
+        </div>
+
+
+
+        <!-- <div>
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Fill form field</mat-label>
+                <input matInput placeholder="Placeholder">
+                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-hint>Hint</mat-hint>
+            </mat-form-field>
+        </div> -->
+        <div class="grid grid-cols-2 gap-4 justify-between items-center">
+            <button mat-flat-button type="button" color="warn" [mat-dialog-close]="false">Cancel</button>
+            <button mat-flat-button type="submit" color="accent">Submit</button>
+        </div>
+
+
+    </form>
+
+    <!-- Accessory Form -->
+    <form *ngIf="accessoryFormGroup" [formGroup]="accessoryFormGroup" (ngSubmit)="formSubmitted(dataModelTypeEnum.accessory)"> 
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Brand</mat-label>
+                <input matInput formControlName="brand" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Product Name</mat-label>
+                <input matInput formControlName="name" />
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Category</mat-label>
+                <input matInput formControlName="category" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Sub Category</mat-label>
+                <input matInput formControlName="subCategory" />
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Price</mat-label>
+                <input matInput formControlName="price" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Size Details</mat-label>
+                <input matInput formControlName="size" />
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Model Number</mat-label>
+                <input matInput formControlName="modelNumber" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Stock Quantity</mat-label>
+                <input matInput formControlName="stockQty" />
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4 justify-between items-center py-2">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Rating</mat-label>
+                <input matInput formControlName="rating" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Rating User Count</mat-label>
+                <input matInput formControlName="ratingUserCount" />
+            </mat-form-field>
+        </div>
+        <div class="block">
+            <mat-form-field class="w-full" appearance="outline" color="accent">
+                <mat-label>Image Url</mat-label>
+                <input matInput formControlName="imageUrl" />
+            </mat-form-field>
+        </div>
+
+        <!-- Make this in FormArray format in phase 2 -->
+        <div class="block">
+            <mat-form-field class="w-full" appearance="outline" color="accent">
+                <mat-label>Features</mat-label>
+                <textarea matInput placeholder="Any features you wanna share?" formControlName="features"></textarea>
+            </mat-form-field>
+        </div>
+        
+        <!-- Offer Tags Section -->
+        <div class="w-full mb-4 flex flex-col gap-1" formArrayName="offerTags">
+        
+            <div *ngFor="let formGrp of getFormArray(formArrayNameEnum.offerTags).controls; let formGroupIndex = index"
+                class="flex gap-2 justify-center items-center" [formGroupName]="formGroupIndex">
+        
+                <!-- Form Control for 'name' property of each FormGroup object in the FormArray  -->
+                <mat-form-field class="flex-grow" appearance="outline" color="accent">
+                    <mat-label>Offer Name</mat-label>
+                    <input matInput formControlName="name" />
+                </mat-form-field>
+                <!-- Form Control for 'color' property of each FormGroup object in the FormArray  -->
+                <mat-form-field class="flex-grow" appearance="outline" color="accent">
+                    <mat-label>Offer Color</mat-label>
+                    <input matInput formControlName="color" />
+                </mat-form-field>
+        
+                <button type="button" class="flex-grow-0 self-start w-6 h-6 rounded-full bg-slate-5 hover:bg-red-500/70"
+                    (click)="removeFormGrpInFormArray(formGroupIndex, formArrayNameEnum.offerTags)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+        
+            <!-- Button to add a new Form Group of (Name, Color) -->
+            <button type="button"
+                class="w-full flex items-center justify-center rounded-md border border-gray-500 border-dotted py-3 hover:border-gray-400 hover:py-3.5 transition-all duration-300"
+                (click)="addChildFormGroupBox(formArrayNameEnum.offerTags)">
+                <span>Add Offer Tags</span>
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        
+        
+        <!-- Visible/Hidden Slide Toggle  -->
+        <div class="mb-5">
+            <mat-slide-toggle formControlName="visible">
+                {{accessoryFormGroup.controls['visible'].value ? 'Visible' : 'Hidden'}}
+            </mat-slide-toggle>
+        </div>
+        
+        <!-- Cancel & Save Buttons section -->
+        <div class="grid grid-cols-2 gap-4 justify-between items-center">
+            <button mat-flat-button type="button" color="warn" [mat-dialog-close]="false">Cancel</button>
+            <button mat-flat-button type="submit" color="accent">Submit</button>
+        </div>
+
+    </form>
+    
+</mat-dialog-content>
+
+<!-- Phase 2: Try bringing the Cancel/Submit Buttons from the form and make them Mat-Dialog-Actions -->
+<!-- <mat-dialog-actions [align]="'end'">
+    <button mat-raised-button mat-dialog-close>Cancel</button> -->
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    <!-- <button mat-button [mat-dialog-close]="true">Delete</button>
+</mat-dialog-actions> -->
